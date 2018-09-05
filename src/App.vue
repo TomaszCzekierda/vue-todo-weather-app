@@ -4,24 +4,34 @@
       <LogoMolecule />
     </HeaderAtom>
     <BodyAtom>
-      <h1>Body</h1>
+      <router-view/>
     </BodyAtom>
     <FooterAtom>
-      <FooterTabMolecule label="TODO" type="todo" alerts="2" selected="true"/>
-      <FooterTabMolecule label="WEATHER" type="weather"/>
+      <FooterTabMolecule label="TODO" type="todo" alerts="2" v-bind:selected="routeName==='todo'" to="/"/>
+      <FooterTabMolecule label="WEATHER" type="weather" v-bind:selected="routeName==='weather'" to="/weather"/>
     </FooterAtom>
   </div>
 </template>
 
 <script>
-import HeaderAtom from './components/atoms/HeaderAtom.vue';
-import BodyAtom from './components/atoms/BodyAtom.vue';
-import FooterAtom from './components/atoms/FooterAtom.vue';
-import LogoMolecule from './components/molecules/LogoMolecule.vue';
-import FooterTabMolecule from './components/molecules/FooterTabMolecule.vue';
+import HeaderAtom from "./components/atoms/HeaderAtom.vue";
+import BodyAtom from "./components/atoms/BodyAtom.vue";
+import FooterAtom from "./components/atoms/FooterAtom.vue";
+import LogoMolecule from "./components/molecules/LogoMolecule.vue";
+import FooterTabMolecule from "./components/molecules/FooterTabMolecule.vue";
 
 export default {
-  name: 'app',
+  name: "app",
+  data() {
+    return {
+      routeName: this.$route.name
+    };
+  },
+  watch: {
+    $route(to, from) {
+      this.routeName = to.name;
+    }
+  },
   components: {
     HeaderAtom,
     BodyAtom,
@@ -29,27 +39,26 @@ export default {
     LogoMolecule,
     FooterTabMolecule
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   flex-direction: column;
   overflow: auto;
 }
-h1{
-  margin:0;
+h1 {
+  margin: 0;
 }
 
 html,
 body,
 body > div {
   height: 100%;
-  margin:0;
+  margin: 0;
 }
-
 </style>
