@@ -16,7 +16,7 @@ export default {
   props: {
     label: String,
     type: String,
-    alerts: String,
+    alerts: Number,
     to: String,
     selected: Boolean
   },

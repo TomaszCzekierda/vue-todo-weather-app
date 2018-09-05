@@ -1,33 +1,112 @@
 <template>
 <div class="todo-list-view">
-    <h1>TODOLISTVIEW</h1>
     <SectionAtom>
+      <InputAtom 
+      type="text" 
+      placeholder="Type your todo"
+      name="title" 
+      :value="todoForm.title"
+      @input="updateTodoFormValue"
+      :class="{invalid: !validation.title.isValid}"/>
+    </SectionAtom>
+    <SectionAtom lower>
+      <div class="todo-list-date-submission-wrapper">
+          <InputAtom 
+          type="date" 
+          name="deadline" 
+          :value="todoForm.deadline"
+          @input="updateTodoFormValue"
+          :class="{invalid: !validation.deadline.isValid}"/>
+          <ButtonAtom label="Add" :disabled=!isFormValid @click=createTodo />
+      </div>
+    </SectionAtom>
+    <SectionAtom lower v-show=!isFormValid>
+      <p class="validation-msg" v-for="(msg, index) in validationMessages" :key=index >
+        {{msg}}
+      </p>
+    </SectionAtom>
+    <SectionAtom lower>
       <TodoItemOrganism 
         v-for="todo in todos"
         :key=todo.id 
         v-bind:label=todo.title
+        v-bind:deadline=todo.deadline
+        v-bind:id=todo.id
         v-bind:completed=todo.completed />
     </SectionAtom>
 </div>
     
 </template>
 <script>
+import { mapState, mapGetters } from "vuex";
+import ButtonAtom from "../atoms/ButtonAtom.vue";
+import InputAtom from "../atoms/InputAtom.vue";
 import SectionAtom from "../atoms/SectionAtom.vue";
 import TodoItemOrganism from "../organisms/TodoItemOrganism.vue";
 export default {
   name: "ToDoListView",
   computed: {
-    todos() {
-      return this.$store.getters["todoStore/getTodos"];
+    ...mapGetters("todoStore", {
+      todos: "getTodos",
+      todoForm: "getTodoForm",
+      validation: "getFormValidation"
+    }),
+    isFormValid: function() {
+      return (
+        Object.values(this.validation)
+          .map(function(item) {
+            return item.isValid;
+          })
+          .filter(value => value === false).length === 0
+      );
+    },
+    validationMessages: function() {
+      return Object.values(this.validation)
+        .map(function(item) {
+          return item.message;
+        })
+        .filter(value => value);
     }
   },
   components: {
+    InputAtom,
     SectionAtom,
-    TodoItemOrganism
+    TodoItemOrganism,
+    ButtonAtom
+  },
+  methods: {
+    updateTodoFormValue(e) {
+      this.$store.dispatch("todoStore/todoFormChanged", {
+        field: e.target.name,
+        value: e.target.value
+      });
+    },
+    createTodo() {
+      this.$store.dispatch("todoStore/addTodo");
+    }
   }
 };
 </script>
 <style scoped>
 .todo-list-view {
+}
+.todo-list-view .todo-list-date-submission-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.todo-list-view .todo-list-date-submission-wrapper > * {
+  margin: 0 5px;
+}
+.todo-list-view .todo-list-date-submission-wrapper > *:first-child {
+  margin-left: 0;
+}
+.todo-list-view .todo-list-date-submission-wrapper > *:last-child {
+  margin-right: 0;
+}
+.todo-list-view .validation-msg {
+  color: red;
+  font-size: 12px;
+  text-align: center;
 }
 </style>

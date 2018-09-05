@@ -7,13 +7,14 @@
       <router-view/>
     </BodyAtom>
     <FooterAtom>
-      <FooterTabMolecule label="TODO" type="todo" alerts="2" v-bind:selected="routeName==='todo'" to="/"/>
+      <FooterTabMolecule label="TODO" type="todo" :alerts=notFinishedTodos v-bind:selected="routeName==='todo'" to="/"/>
       <FooterTabMolecule label="WEATHER" type="weather" v-bind:selected="routeName==='weather'" to="/weather"/>
     </FooterAtom>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import HeaderAtom from "./components/atoms/HeaderAtom.vue";
 import BodyAtom from "./components/atoms/BodyAtom.vue";
 import FooterAtom from "./components/atoms/FooterAtom.vue";
@@ -31,6 +32,11 @@ export default {
     $route(to, from) {
       this.routeName = to.name;
     }
+  },
+  computed: {
+    ...mapGetters("todoStore", {
+      notFinishedTodos: "notFinishedTodos"
+    })
   },
   components: {
     HeaderAtom,

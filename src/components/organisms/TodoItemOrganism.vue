@@ -1,10 +1,10 @@
 <template>
-    <div class="todo-item-organism">
+    <div class="todo-item-organism" @click="toggleTodo(id)">
         <ListItemAtom>
             <CheckboxMolecule v-bind:checked=completed />
-            <div class="to-do-banner"></div>
+            <div class="to-do-banner" :class=bannerState></div>
             <div class="to-do-label">{{label}}</div>
-            <div class="to-do-date">2018-01-20</div>
+            <div class="to-do-date">{{deadline.toLocaleDateString()}}</div>
         </ListItemAtom>
     </div>
 </template>
@@ -19,7 +19,27 @@ export default {
   },
   props: {
     label: String,
-    completed: Boolean
+    completed: Boolean,
+    id: Number,
+    deadline: Date
+  },
+  computed: {
+    bannerState: function() {
+      if (this.completed) {
+        return "banner-completed";
+      }
+      if (this.deadline.toDateString() == new Date().toDateString()) {
+        return "banner-today";
+      }
+      if (this.deadline.getTime() < new Date().getTime()) {
+        return "banner-late";
+      }
+    }
+  },
+  methods: {
+    toggleTodo: function(id) {
+      this.$store.dispatch("todoStore/toggleTodo", id);
+    }
   }
 };
 </script>
@@ -41,6 +61,19 @@ export default {
   top: 0px;
   left: 0px;
 }
+
+.todo-item-organism > .list-item-atom > .to-do-banner.banner-completed {
+  background: green;
+}
+
+.todo-item-organism > .list-item-atom > .to-do-banner.banner-today {
+  background: yellow;
+}
+
+.todo-item-organism > .list-item-atom > .to-do-banner.banner-late {
+  background: red;
+}
+
 .todo-item-organism > .list-item-atom > .to-do-label {
   margin-left: 10px;
   line-height: 44px;
