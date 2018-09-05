@@ -1,12 +1,20 @@
 <template>
-    <input class="input-atom" @input="onInput" />
+    <input class="input-atom" v-model="internalValue" />
 </template>
 <script>
 export default {
   name: "InputAtom",
-  methods: {
-    onInput(e) {
-      this.$emit("input", e);
+  props: {
+    value: String
+  },
+  computed: {
+    internalValue: {
+      get() {
+        return this.value;
+      },
+      set(v) {
+        this.$emit("input", v);
+      }
     }
   }
 };

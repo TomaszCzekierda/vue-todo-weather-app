@@ -4,9 +4,7 @@
       <InputAtom 
       type="text" 
       placeholder="Type your todo"
-      name="title" 
-      :value="todoForm.title"
-      @input="updateTodoFormValue"
+      v-model="title"
       :class="{invalid: !validation.title.isValid}"/>
     </SectionAtom>
     <SectionAtom lower>
@@ -14,8 +12,7 @@
           <InputAtom 
           type="date" 
           name="deadline" 
-          :value="todoForm.deadline"
-          @input="updateTodoFormValue"
+          v-model="deadline"
           :class="{invalid: !validation.deadline.isValid}"/>
           <ButtonAtom label="Add" :disabled=!isFormValid @click=createTodo />
       </div>
@@ -51,6 +48,22 @@ export default {
       todoForm: "getTodoForm",
       validation: "getFormValidation"
     }),
+    title: {
+      get() {
+        return this.todoForm.title;
+      },
+      set(value) {
+        this.updateTodoFormValue("title", value);
+      }
+    },
+    deadline: {
+      get() {
+        return this.todoForm.deadline;
+      },
+      set(value) {
+        this.updateTodoFormValue("deadline", value);
+      }
+    },
     isFormValid: function() {
       return (
         Object.values(this.validation)
@@ -75,10 +88,10 @@ export default {
     ButtonAtom
   },
   methods: {
-    updateTodoFormValue(e) {
+    updateTodoFormValue(target, value) {
       this.$store.dispatch("todoStore/todoFormChanged", {
-        field: e.target.name,
-        value: e.target.value
+        field: target,
+        value: value
       });
     },
     createTodo() {
