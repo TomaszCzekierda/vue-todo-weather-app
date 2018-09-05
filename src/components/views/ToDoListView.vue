@@ -31,8 +31,7 @@
         v-bind:id=todo.id
         v-bind:completed=todo.completed />
     </SectionAtom>
-</div>
-    
+</div>    
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";

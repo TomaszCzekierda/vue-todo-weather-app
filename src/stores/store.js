@@ -1,13 +1,15 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import Vue from "vue";
+import Vuex from "vuex";
 
-import todoStore from './todoStore'
+import todoStore from "./todoStore"
+import weatherStore from "./weatherStore"
 
 Vue.use(Vuex);
 
 var store = new Vuex.Store({
     modules: {
-        todoStore: todoStore
+        todoStore: todoStore,
+        weatherStore: weatherStore
     }
 });
 

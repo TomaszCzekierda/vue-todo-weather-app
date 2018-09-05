@@ -1,11 +1,33 @@
 <template>
-    <h1>WeatherView</h1>
+<div>
+    <SectionAtom>
+        <LoaderMolecule v-if="fetchStatus"/>
+        <WeatherItemOrganism v-for="(day, index) in weather" :key="index" :date="day.date" :forecast="day.forecast"/>
+    </SectionAtom>
+</div>
 </template>
 <script>
-    export default {
-        name: 'WeatherView'
-    }
+import { mapState, mapGetters } from "vuex";
+import SectionAtom from "../atoms/SectionAtom.vue";
+import LoaderMolecule from "../molecules/LoaderMolecule.vue";
+import WeatherItemOrganism from "../organisms/WeatherItemOrganism.vue";
+export default {
+  name: "WeatherView",
+  components: {
+    SectionAtom,
+    LoaderMolecule,
+    WeatherItemOrganism
+  },
+  computed: {
+    ...mapGetters("weatherStore", {
+      weather: "getWeather",
+      fetchStatus: "getFetchingStatus"
+    })
+  },
+  created() {
+    this.$store.dispatch("weatherStore/fetchWeather");
+  }
+};
 </script>
 <style scoped>
-
 </style>
