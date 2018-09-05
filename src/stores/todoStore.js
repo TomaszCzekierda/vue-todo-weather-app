@@ -1,7 +1,3 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-Vue.use(Vuex)
-
 var state = {
     todos: [
         {
@@ -61,11 +57,12 @@ var actions = {
     }
 }
 
-var store = new Vuex.Store({
+const store = {
+    namespaced: true,
     state: state,
     getters: getters,
     mutations: mutations,
     actions: actions
-});
+}
 
-export default store;
+export default store; 
